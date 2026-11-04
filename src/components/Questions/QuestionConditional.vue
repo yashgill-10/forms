@@ -415,6 +415,10 @@ export default defineComponent({
 					label: t('forms', 'Date and time'),
 					types: ['date', 'time'],
 				},
+				{
+					label: t('forms', 'Other'),
+					types: ['file'],
+				},
 			]
 
 			return groups.map((group) => ({
@@ -507,8 +511,11 @@ export default defineComponent({
 		},
 
 		activeBranches() {
-			// An unanswered trigger activates no branch
-			if (!this.triggerValues || this.triggerValues.length === 0) {
+			// An unanswered trigger activates no branch, except "no file uploaded" for file triggers
+			if (
+				(!this.triggerValues || this.triggerValues.length === 0)
+				&& this.triggerType !== 'file'
+			) {
 				return null
 			}
 			return this.branches.filter((branch) =>
@@ -966,6 +973,14 @@ export default defineComponent({
 					}
 				}
 				return false
+			}
+
+			if (this.triggerType === 'file') {
+				const hasFile =
+					this.triggerValues.length > 0 && this.triggerValues[0] !== ''
+				return branch.conditions.some(
+					(c) => (c.fileUploaded ?? true) === hasFile,
+				)
 			}
 
 			if (['date', 'time'].includes(this.triggerType)) {

@@ -1946,6 +1946,16 @@ class FormsServiceTest extends TestCase {
 				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
 				'expected' => true
 			],
+			'valid-conditional-file-trigger' => [
+				'extraSettings' => [
+					'triggerType' => Constants::ANSWER_TYPE_FILE,
+					'branches' => [
+						['id' => 'branch-1', 'conditions' => [['type' => 'file_uploaded', 'value' => true]]]
+					]
+				],
+				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
+				'expected' => true
+			],
 			'invalid-conditional-missing-triggerType' => [
 				'extraSettings' => [
 					'branches' => [

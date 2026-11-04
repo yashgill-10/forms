@@ -1131,8 +1131,8 @@ class SubmissionService {
 		// Option ids arrive as numbers or strings depending on the trigger component
 		$selectedOptionIds = array_map('strval', array_filter($triggerAnswer, 'is_scalar'));
 
-		// An unanswered trigger activates no branch
-		if ($triggerAnswer === [] || ($triggerAnswer[0] ?? '') === '') {
+		// An unanswered trigger activates no branch, except "no file uploaded" for file triggers
+		if ($triggerType !== Constants::ANSWER_TYPE_FILE && ($triggerAnswer === [] || ($triggerAnswer[0] ?? '') === '')) {
 			return false;
 		}
 
@@ -1155,6 +1155,14 @@ class SubmissionService {
 						continue;
 					}
 					if (array_diff(array_map('strval', $optionIds), $selectedOptionIds) === []) {
+						return true;
+					}
+				}
+				return false;
+			case Constants::ANSWER_TYPE_FILE:
+				$hasFile = !empty($triggerAnswer);
+				foreach ($conditions as $condition) {
+					if (($condition['fileUploaded'] ?? true) === $hasFile) {
 						return true;
 					}
 				}
