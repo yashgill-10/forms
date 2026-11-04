@@ -411,6 +411,10 @@ export default defineComponent({
 					label: t('forms', 'Choice'),
 					types: ['multiple_unique', 'multiple', 'dropdown'],
 				},
+				{
+					label: t('forms', 'Date and time'),
+					types: ['date', 'time'],
+				},
 			]
 
 			return groups.map((group) => ({
@@ -962,6 +966,24 @@ export default defineComponent({
 					}
 				}
 				return false
+			}
+
+			if (['date', 'time'].includes(this.triggerType)) {
+				const dateValue = this.triggerValues[0] || ''
+				if (!dateValue) {
+					return false
+				}
+				return branch.conditions.some((c) => {
+					const min = c.min
+					const max = c.max
+					if (min && dateValue < min) {
+						return false
+					}
+					if (max && dateValue > max) {
+						return false
+					}
+					return true
+				})
 			}
 
 			return false

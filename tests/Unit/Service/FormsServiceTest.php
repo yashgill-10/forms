@@ -1936,6 +1936,16 @@ class FormsServiceTest extends TestCase {
 				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
 				'expected' => true
 			],
+			'valid-conditional-date-trigger' => [
+				'extraSettings' => [
+					'triggerType' => Constants::ANSWER_TYPE_DATE,
+					'branches' => [
+						['id' => 'branch-1', 'conditions' => [['type' => 'date_range', 'min' => '2024-01-01', 'max' => '2024-12-31']]]
+					]
+				],
+				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
+				'expected' => true
+			],
 			'invalid-conditional-missing-triggerType' => [
 				'extraSettings' => [
 					'branches' => [
@@ -2030,6 +2040,16 @@ class FormsServiceTest extends TestCase {
 				],
 				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
 				'expected' => false
+			],
+			'valid-conditional-time-trigger' => [
+				'extraSettings' => [
+					'triggerType' => Constants::ANSWER_TYPE_TIME,
+					'branches' => [
+						['id' => 'branch-1', 'conditions' => [['type' => 'date_range', 'min' => '08:00', 'max' => '12:00']]]
+					]
+				],
+				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
+				'expected' => true
 			],
 			'invalid-conditional-option-id-not-a-number' => [
 				'extraSettings' => [

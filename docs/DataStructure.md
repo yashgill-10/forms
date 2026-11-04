@@ -308,6 +308,9 @@ Supported trigger types for conditional questions:
 | `multiple_unique` | `option_selected`                                                           | Radio buttons - the selected option               |
 | `dropdown`        | `option_selected`                                                           | Dropdown - the selected option                    |
 | `multiple`        | `options_combination`                                                       | Checkboxes - all options of a combination         |
+| `date`            | `date_range`                                                                | Date - range including its bounds (`YYYY-MM-DD`)  |
+| `datetime`        | `date_range`                                                                | Deprecated date and time (`YYYY-MM-DD HH:mm`)     |
+| `time`            | `date_range`                                                                | Time - range including its bounds (`HH:mm`)       |
 
 A branch is shown when any of its conditions matches. Several branches can be shown at once.
 
@@ -356,6 +359,18 @@ Conditions determine when a branch is activated. The structure depends on the tr
 ```
 
 All options in `optionIds` must be selected for the condition to match.
+
+#### date_range (for date, datetime, time)
+
+```json
+{ "type": "date_range", "min": "2024-01-01", "max": "2024-12-31" }
+```
+
+```json
+{ "type": "date_range", "min": "09:00", "max": "17:00" }
+```
+
+`min` and `max` use the answer format of the trigger type and are optional.
 
 ### Conditional Question Example
 
