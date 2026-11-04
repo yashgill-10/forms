@@ -1614,6 +1614,57 @@ file2.txt"
 				// Expected Result
 				'Question "Sub Q1" is required.',
 			],
+			'valid-conditional-linearscale-trigger' => [
+				// Questions - conditional with linearscale trigger
+				[
+					[
+						'id' => 100,
+						'type' => Constants::ANSWER_TYPE_CONDITIONAL,
+						'text' => 'Scale Conditional',
+						'isRequired' => true,
+						'extraSettings' => [
+							'triggerType' => Constants::ANSWER_TYPE_LINEARSCALE,
+							'branches' => [
+								[
+									'id' => 'branch-low',
+									'conditions' => [['type' => 'value_range', 'min' => 1, 'max' => 3]],
+									'subQuestions' => [
+										[
+											'id' => 101,
+											'type' => 'long',
+											'text' => 'Why low?',
+											'isRequired' => true,
+										]
+									]
+								],
+								[
+									'id' => 'branch-high',
+									'conditions' => [['type' => 'value_range', 'min' => 4, 'max' => 5]],
+									'subQuestions' => [
+										[
+											'id' => 102,
+											'type' => 'long',
+											'text' => 'Why high?',
+											'isRequired' => true,
+										]
+									]
+								]
+							]
+						]
+					]
+				],
+				// Answers - trigger value 2 activates branch-low
+				[
+					'100' => [
+						'trigger' => ['2'],
+						'subQuestions' => [
+							'101' => ['Because reasons']
+						]
+					]
+				],
+				// Expected Result - valid
+				null,
+			],
 			'valid-conditional-checkbox-combination-trigger' => [
 				// Questions - conditional with multiple (checkbox) trigger
 				[

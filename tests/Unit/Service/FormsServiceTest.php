@@ -1936,6 +1936,16 @@ class FormsServiceTest extends TestCase {
 				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
 				'expected' => true
 			],
+			'valid-conditional-linearscale-trigger' => [
+				'extraSettings' => [
+					'triggerType' => Constants::ANSWER_TYPE_LINEARSCALE,
+					'branches' => [
+						['id' => 'branch-1', 'conditions' => [['type' => 'value_range', 'min' => 1, 'max' => 3]]]
+					]
+				],
+				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
+				'expected' => true
+			],
 			'valid-conditional-date-trigger' => [
 				'extraSettings' => [
 					'triggerType' => Constants::ANSWER_TYPE_DATE,

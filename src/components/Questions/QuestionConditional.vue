@@ -417,7 +417,7 @@ export default defineComponent({
 				},
 				{
 					label: t('forms', 'Other'),
-					types: ['file'],
+					types: ['linearscale', 'color', 'file'],
 				},
 			]
 
@@ -973,6 +973,35 @@ export default defineComponent({
 					}
 				}
 				return false
+			}
+
+			if (this.triggerType === 'linearscale') {
+				const numValue = parseFloat(this.triggerValues[0]) || 0
+				return branch.conditions.some((c) => {
+					if (c.type === 'value_equals') {
+						return numValue === parseFloat(c.value)
+					} else if (c.type === 'value_not_equals') {
+						return numValue !== parseFloat(c.value)
+					} else if (c.type === 'value_min') {
+						const min = c.min ?? Number.MIN_SAFE_INTEGER
+						return numValue >= min
+					} else if (c.type === 'value_max') {
+						const max = c.max ?? Number.MAX_SAFE_INTEGER
+						return numValue <= max
+					} else if (c.type === 'value_range') {
+						const min = c.min ?? Number.MIN_SAFE_INTEGER
+						const max = c.max ?? Number.MAX_SAFE_INTEGER
+						return numValue >= min && numValue <= max
+					}
+					return false
+				})
+			}
+
+			if (this.triggerType === 'color') {
+				const colorValue = (this.triggerValues[0] || '').toLowerCase()
+				return branch.conditions.some(
+					(c) => colorValue === (c.value || '').toLowerCase(),
+				)
 			}
 
 			if (this.triggerType === 'file') {
