@@ -701,7 +701,10 @@ export default defineComponent({
 					this.triggerType,
 				)
 			) {
-				const optionIds = branch.conditions.map((c) => c.optionId)
+				// Checkbox conditions hold a combination of options
+				const optionIds = branch.conditions.flatMap(
+					(c) => c.optionIds ?? [c.optionId],
+				)
 				const optionTexts = optionIds
 					.map((id) => this.options.find((o) => o.id === id)?.text)
 					.filter(Boolean)
