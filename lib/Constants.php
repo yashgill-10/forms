@@ -260,6 +260,7 @@ class Constants {
 	 * Condition types for conditional questions
 	 */
 	public const CONDITION_TYPE_OPTION_SELECTED = 'option_selected';
+	public const CONDITION_TYPE_OPTIONS_COMBINATION = 'options_combination';
 
 	/**
 	 * Trigger types allowed for conditional questions
@@ -268,6 +269,7 @@ class Constants {
 	public const CONDITIONAL_TRIGGER_TYPES = [
 		self::ANSWER_TYPE_MULTIPLEUNIQUE => [self::CONDITION_TYPE_OPTION_SELECTED],
 		self::ANSWER_TYPE_DROPDOWN => [self::CONDITION_TYPE_OPTION_SELECTED],
+		self::ANSWER_TYPE_MULTIPLE => [self::CONDITION_TYPE_OPTIONS_COMBINATION],
 	];
 
 	/**

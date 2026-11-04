@@ -1926,6 +1926,16 @@ class FormsServiceTest extends TestCase {
 				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
 				'expected' => true
 			],
+			'valid-conditional-multiple-trigger' => [
+				'extraSettings' => [
+					'triggerType' => Constants::ANSWER_TYPE_MULTIPLE,
+					'branches' => [
+						['id' => 'branch-1', 'conditions' => [['type' => 'options_combination', 'optionIds' => [1, 2]]]]
+					]
+				],
+				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
+				'expected' => true
+			],
 			'invalid-conditional-missing-triggerType' => [
 				'extraSettings' => [
 					'branches' => [
@@ -2026,6 +2036,16 @@ class FormsServiceTest extends TestCase {
 					'triggerType' => Constants::ANSWER_TYPE_DROPDOWN,
 					'branches' => [
 						['id' => 'branch-1', 'conditions' => [['optionId' => ['nested']]]]
+					]
+				],
+				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
+				'expected' => false
+			],
+			'invalid-conditional-option-ids-not-numbers' => [
+				'extraSettings' => [
+					'triggerType' => Constants::ANSWER_TYPE_MULTIPLE,
+					'branches' => [
+						['id' => 'branch-1', 'conditions' => [['type' => 'options_combination', 'optionIds' => [1, 'two']]]]
 					]
 				],
 				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,

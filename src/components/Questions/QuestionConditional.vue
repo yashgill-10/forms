@@ -409,7 +409,7 @@ export default defineComponent({
 			const groups = [
 				{
 					label: t('forms', 'Choice'),
-					types: ['multiple_unique', 'dropdown'],
+					types: ['multiple_unique', 'multiple', 'dropdown'],
 				},
 			]
 
@@ -445,10 +445,12 @@ export default defineComponent({
 		},
 
 		/**
-		 * Check if trigger type uses predefined options (radio, dropdown)
+		 * Check if trigger type uses predefined options (radio, dropdown, checkbox)
 		 */
 		isOptionBasedTrigger() {
-			return ['multiple_unique', 'dropdown'].includes(this.triggerType)
+			return ['multiple_unique', 'dropdown', 'multiple'].includes(
+				this.triggerType,
+			)
 		},
 
 		triggerComponent() {
@@ -694,7 +696,11 @@ export default defineComponent({
 				})
 			}
 
-			if (this.isOptionBasedTrigger) {
+			if (
+				['multiple_unique', 'dropdown', 'multiple'].includes(
+					this.triggerType,
+				)
+			) {
 				const optionIds = branch.conditions.map((c) => c.optionId)
 				const optionTexts = optionIds
 					.map((id) => this.options.find((o) => o.id === id)?.text)
@@ -936,6 +942,23 @@ export default defineComponent({
 				return branch.conditions.some((c) =>
 					triggerValuesAsStrings.includes(String(c.optionId)),
 				)
+			}
+
+			if (this.triggerType === 'multiple') {
+				// Multi-select: all condition option IDs must be selected
+				for (const c of branch.conditions) {
+					const optionIds = c.optionIds
+					if (!Array.isArray(optionIds) || optionIds.length === 0) {
+						continue
+					}
+					const allSelected = optionIds.every((id) =>
+						triggerValuesAsStrings.includes(String(id)),
+					)
+					if (allSelected) {
+						return true
+					}
+				}
+				return false
 			}
 
 			return false

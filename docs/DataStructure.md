@@ -307,6 +307,7 @@ Supported trigger types for conditional questions:
 | ----------------- | --------------------------------------------------------------------------- | ------------------------------------------------- |
 | `multiple_unique` | `option_selected`                                                           | Radio buttons - the selected option               |
 | `dropdown`        | `option_selected`                                                           | Dropdown - the selected option                    |
+| `multiple`        | `options_combination`                                                       | Checkboxes - all options of a combination         |
 
 A branch is shown when any of its conditions matches. Several branches can be shown at once.
 
@@ -347,6 +348,14 @@ Conditions determine when a branch is activated. The structure depends on the tr
 ```json
 { "type": "option_selected", "optionId": 42 }
 ```
+
+#### options_combination (for multiple)
+
+```json
+{ "type": "options_combination", "optionIds": [42, 43] }
+```
+
+All options in `optionIds` must be selected for the condition to match.
 
 ### Conditional Question Example
 

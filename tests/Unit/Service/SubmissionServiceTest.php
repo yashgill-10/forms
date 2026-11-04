@@ -1614,6 +1614,55 @@ file2.txt"
 				// Expected Result
 				'Question "Sub Q1" is required.',
 			],
+			'valid-conditional-checkbox-combination-trigger' => [
+				// Questions - conditional with multiple (checkbox) trigger
+				[
+					[
+						'id' => 100,
+						'type' => Constants::ANSWER_TYPE_CONDITIONAL,
+						'text' => 'Checkbox Conditional',
+						'isRequired' => true,
+						'extraSettings' => [
+							'triggerType' => Constants::ANSWER_TYPE_MULTIPLE,
+							'branches' => [
+								[
+									'id' => 'branch-combo1',
+									'conditions' => [['type' => 'options_combination', 'optionIds' => [10, 11]]],
+									'subQuestions' => [
+										[
+											'id' => 101,
+											'type' => 'short',
+											'text' => 'Combo 1 question',
+											'isRequired' => true,
+										]
+									]
+								],
+								[
+									'id' => 'branch-combo2',
+									'conditions' => [['type' => 'options_combination', 'optionIds' => [10]]],
+									'subQuestions' => []
+								]
+							]
+						],
+						'options' => [
+							['id' => 10],
+							['id' => 11],
+							['id' => 12]
+						]
+					]
+				],
+				// Answers - selecting options 10 and 11 activates branch-combo1
+				[
+					'100' => [
+						'trigger' => ['10', '11'],
+						'subQuestions' => [
+							'101' => ['Combo answer']
+						]
+					]
+				],
+				// Expected Result - valid
+				null,
+			],
 			'valid-conditional-no-branch-matched' => [
 				// Questions - conditional where trigger value doesn't match any branch
 				[
@@ -1719,6 +1768,37 @@ file2.txt"
 				['100' => ['trigger' => [], 'subQuestions' => []]],
 				// Expected Result
 				'Question "Conditional Q" is required.',
+			],
+			'invalid-conditional-checkbox-any-condition' => [
+				// Questions - a branch is active if any of its option combinations is selected
+				[
+					[
+						'id' => 100,
+						'type' => Constants::ANSWER_TYPE_CONDITIONAL,
+						'text' => 'Checkbox Conditional',
+						'isRequired' => false,
+						'extraSettings' => [
+							'triggerType' => Constants::ANSWER_TYPE_MULTIPLE,
+							'branches' => [
+								[
+									'id' => 'branch-1',
+									'conditions' => [
+										['type' => 'options_combination', 'optionIds' => [10, 11]],
+										['type' => 'options_combination', 'optionIds' => [12]],
+									],
+									'subQuestions' => [
+										['id' => 101, 'type' => 'short', 'text' => 'Combo question', 'isRequired' => true],
+									],
+								],
+							],
+						],
+						'options' => [['id' => 10], ['id' => 11], ['id' => 12]],
+					],
+				],
+				// Answers - only the second combination is selected
+				['100' => ['trigger' => ['12'], 'subQuestions' => []]],
+				// Expected Result
+				'Question "Combo question" is required.',
 			],
 			'invalid-conditional-answer-for-inactive-branch' => [
 				// Questions - two branches with one subquestion each
