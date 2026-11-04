@@ -345,6 +345,7 @@ import {
 import answerTypes from '../../models/AnswerTypes.ts'
 import logger from '../../utils/Logger.ts'
 import OcsResponse2Data from '../../utils/OcsResponse2Data.ts'
+import { splitRegex } from '../../utils/RegularExpression.ts'
 
 // Types of subquestions, conditional questions can not be nested
 const SUBQUESTION_TYPES = [
@@ -410,6 +411,10 @@ export default defineComponent({
 				{
 					label: t('forms', 'Choice'),
 					types: ['multiple_unique', 'multiple', 'dropdown'],
+				},
+				{
+					label: t('forms', 'Text'),
+					types: ['short', 'long'],
 				},
 				{
 					label: t('forms', 'Date and time'),
@@ -975,6 +980,22 @@ export default defineComponent({
 				return false
 			}
 
+			if (['short', 'long'].includes(this.triggerType)) {
+				const text = this.triggerValues[0] || ''
+				return branch.conditions.some((c) => {
+					if (c.type === 'regex') {
+						return this.safeRegexMatch(c.value, text)
+					}
+					if (c.type === 'string_contains') {
+						return text.includes(c.value || '')
+					}
+					if (c.type === 'string_equals') {
+						return text === c.value
+					}
+					return false
+				})
+			}
+
 			if (this.triggerType === 'linearscale') {
 				const numValue = parseFloat(this.triggerValues[0]) || 0
 				return branch.conditions.some((c) => {
@@ -1031,6 +1052,29 @@ export default defineComponent({
 			}
 
 			return false
+		},
+
+		/**
+		 * Safely execute a regex match to prevent ReDoS attacks
+		 *
+		 * @param {string} pattern The regular expression with delimiters, e.g. `/^yes$/i`
+		 * @param {string} subject The string to match against
+		 * @return {boolean} True if pattern matches
+		 */
+		safeRegexMatch(pattern, subject) {
+			if (!pattern || subject.length > 10000) {
+				return false
+			}
+			// Same format as the server: `/pattern/modifiers`
+			const { pattern: source, modifiers } = splitRegex(pattern)
+			if (!source) {
+				return false
+			}
+			try {
+				return new RegExp(source, modifiers).test(subject)
+			} catch {
+				return false
+			}
 		},
 
 		async validate() {

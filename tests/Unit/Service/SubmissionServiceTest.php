@@ -1665,6 +1665,50 @@ file2.txt"
 				// Expected Result - valid
 				null,
 			],
+			'valid-conditional-short-text-trigger' => [
+				// Questions - conditional with short text trigger using string_equals
+				[
+					[
+						'id' => 100,
+						'type' => Constants::ANSWER_TYPE_CONDITIONAL,
+						'text' => 'Text Conditional',
+						'isRequired' => true,
+						'extraSettings' => [
+							'triggerType' => Constants::ANSWER_TYPE_SHORT,
+							'branches' => [
+								[
+									'id' => 'branch-yes',
+									'conditions' => [['type' => 'string_equals', 'value' => 'yes']],
+									'subQuestions' => [
+										[
+											'id' => 101,
+											'type' => 'short',
+											'text' => 'Please elaborate',
+											'isRequired' => true,
+										]
+									]
+								],
+								[
+									'id' => 'branch-no',
+									'conditions' => [['type' => 'string_equals', 'value' => 'no']],
+									'subQuestions' => []
+								]
+							]
+						]
+					]
+				],
+				// Answers - trigger "yes" activates branch-yes
+				[
+					'100' => [
+						'trigger' => ['yes'],
+						'subQuestions' => [
+							'101' => ['More details here']
+						]
+					]
+				],
+				// Expected Result - valid
+				null,
+			],
 			'valid-conditional-checkbox-combination-trigger' => [
 				// Questions - conditional with multiple (checkbox) trigger
 				[
@@ -1905,6 +1949,31 @@ file2.txt"
 				['100' => ['trigger' => ['1' => '10'], 'subQuestions' => []]],
 				// Expected Result
 				'Invalid answer for conditional question.',
+			],
+			'invalid-conditional-regex-trigger' => [
+				// Questions - regex conditions use the same delimited format as validationRegex
+				[
+					[
+						'id' => 100,
+						'type' => Constants::ANSWER_TYPE_CONDITIONAL,
+						'text' => 'Text Conditional',
+						'isRequired' => false,
+						'extraSettings' => [
+							'triggerType' => Constants::ANSWER_TYPE_SHORT,
+							'branches' => [
+								[
+									'id' => 'branch-yes',
+									'conditions' => [['type' => 'regex', 'value' => '/^ye(s|p)$/i']],
+									'subQuestions' => [['id' => 101, 'type' => 'short', 'text' => 'Please elaborate', 'isRequired' => true]],
+								],
+							],
+						],
+					],
+				],
+				// Answers - matches the regex, required subquestion not answered
+				['100' => ['trigger' => ['Yep'], 'subQuestions' => []]],
+				// Expected Result
+				'Question "Please elaborate" is required.',
 			],
 			'invalid-conditional-date-range-includes-its-bounds' => [
 				// Questions - date range of a single day

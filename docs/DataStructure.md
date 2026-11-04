@@ -308,6 +308,8 @@ Supported trigger types for conditional questions:
 | `multiple_unique` | `option_selected`                                                           | Radio buttons - the selected option               |
 | `dropdown`        | `option_selected`                                                           | Dropdown - the selected option                    |
 | `multiple`        | `options_combination`                                                       | Checkboxes - all options of a combination         |
+| `short`           | `string_equals`, `string_contains`, `regex`                                 | Short text - string or regex matching             |
+| `long`            | `string_contains`, `regex`                                                  | Long text - string or regex matching              |
 | `linearscale`     | `value_equals`, `value_not_equals`, `value_range`, `value_min`, `value_max` | Linear scale - numeric value matching             |
 | `date`            | `date_range`                                                                | Date - range including its bounds (`YYYY-MM-DD`)  |
 | `datetime`        | `date_range`                                                                | Deprecated date and time (`YYYY-MM-DD HH:mm`)     |
@@ -362,6 +364,26 @@ Conditions determine when a branch is activated. The structure depends on the tr
 ```
 
 All options in `optionIds` must be selected for the condition to match.
+
+#### string_equals (for short)
+
+```json
+{ "type": "string_equals", "value": "yes" }
+```
+
+#### string_contains (for short, long)
+
+```json
+{ "type": "string_contains", "value": "keyword" }
+```
+
+#### regex (for short, long)
+
+```json
+{ "type": "regex", "value": "/^yes/i" }
+```
+
+The expression uses the same format as `validationRegex`: enclosed in slashes, with the optional modifiers `i`, `m` and `s`.
 
 #### value_equals, value_not_equals (for linearscale), value_equals (for color)
 

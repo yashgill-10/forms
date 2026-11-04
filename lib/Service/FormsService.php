@@ -965,6 +965,9 @@ class FormsService {
 					return false;
 				}
 			}
+			if (($condition['type'] ?? null) === Constants::CONDITION_TYPE_REGEX && !$this->isValidRegex((string)($condition['value'] ?? ''))) {
+				return false;
+			}
 		}
 		return true;
 	}

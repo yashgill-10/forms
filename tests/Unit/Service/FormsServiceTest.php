@@ -1936,6 +1936,16 @@ class FormsServiceTest extends TestCase {
 				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
 				'expected' => true
 			],
+			'valid-conditional-short-trigger' => [
+				'extraSettings' => [
+					'triggerType' => Constants::ANSWER_TYPE_SHORT,
+					'branches' => [
+						['id' => 'branch-1', 'conditions' => [['type' => 'string_equals', 'value' => 'yes']]]
+					]
+				],
+				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
+				'expected' => true
+			],
 			'valid-conditional-linearscale-trigger' => [
 				'extraSettings' => [
 					'triggerType' => Constants::ANSWER_TYPE_LINEARSCALE,
@@ -2051,9 +2061,29 @@ class FormsServiceTest extends TestCase {
 				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
 				'expected' => false
 			],
+			'valid-conditional-regex-condition' => [
+				'extraSettings' => [
+					'triggerType' => Constants::ANSWER_TYPE_SHORT,
+					'branches' => [
+						['id' => 'branch-1', 'conditions' => [['type' => 'regex', 'value' => '/^ye(s|p)$/i']]]
+					]
+				],
+				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
+				'expected' => true
+			],
+			'invalid-conditional-regex-without-delimiters' => [
+				'extraSettings' => [
+					'triggerType' => Constants::ANSWER_TYPE_SHORT,
+					'branches' => [
+						['id' => 'branch-1', 'conditions' => [['type' => 'regex', 'value' => '^yes$']]]
+					]
+				],
+				'questionType' => Constants::ANSWER_TYPE_CONDITIONAL,
+				'expected' => false
+			],
 			'invalid-conditional-condition-type-of-other-trigger' => [
 				'extraSettings' => [
-					'triggerType' => Constants::ANSWER_TYPE_DROPDOWN,
+					'triggerType' => Constants::ANSWER_TYPE_LONG,
 					'branches' => [
 						['id' => 'branch-1', 'conditions' => [['type' => 'value_range', 'min' => 1, 'max' => 3]]]
 					]
